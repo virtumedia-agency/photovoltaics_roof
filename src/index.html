@@ -38,6 +38,7 @@
       #myroof-world-map path {
         transform-origin: 50% 50%;
         transform-box: fill-box;
+        transition: fill 0.1s linear, transform 0.2s linear;
       }
 
       #map-hover {
@@ -52,6 +53,7 @@
         z-index: 9999;
         padding: 6px 14px;
         display: none;
+        pointer-events: none;
       }
 
       #map-hover p {
