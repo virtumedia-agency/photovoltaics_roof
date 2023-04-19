@@ -1,3 +1,9 @@
+@font-face {
+  font-family: Arboria;
+  src: url(Arboria-Medium.otf);
+}
+
+
 :root {
   --mobile-selector-color: #000;
   --mobile-selector-border: #000;

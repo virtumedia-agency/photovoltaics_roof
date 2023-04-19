@@ -1,14 +1,30 @@
+'use strict';
+
 const loadMap = (file, labels) => {
   const wrapDiv = document.querySelector('.map');
+  const selectCountryDesc = document.querySelector('#select-country-desc');
 
-  fetch(file)
-    .then((r) => r.text())
-    .then((text) => {
-      wrapDiv.innerHTML =
-        text +
-        '\n<div id="mobile-map-display"><svg height="75%" width="75%" viewBox="0 0 500 500"></svg><p id="mobile-map-selector-label"></p></div>';
-      initMap(labels);
-      chechMobile();
+  const params = new URLSearchParams(window.location.search);
+  window.lang = params.get('lang') || 'pl';
+  window.translations = {};
+
+  fetch('langs.json')
+    .then((res) => res.json())
+    .then((tr) => {
+      translations = tr;
+
+      selectCountryDesc.innerText = _(selectCountryDesc.innerText);
+
+      fetch(file)
+        .then((r) => r.text())
+        .then((text) => {
+          wrapDiv.innerHTML =
+            text +
+            '\n<div id="mobile-map-display"><svg height="75%" width="75%" viewBox="0 0 500 500"></svg><p id="mobile-map-selector-label"></p></div>';
+          initMap(labels);
+          chechMobile();
+        })
+        .catch(console.error.bind(console));
     })
     .catch(console.error.bind(console));
 };
@@ -54,14 +70,14 @@ const initMap = (labels) => {
           path.style.fill = label.fill;
           path.style.stroke = label.stroke;
           path.style.transform = `scale(${scale})`;
-          infoLabel.innerHTML = label.message;
+          infoLabel.innerHTML = _(label.message);
           map.appendChild(path);
         }
       });
 
       if (showLabel) {
         label.style.display = 'block';
-        countryLabel.innerHTML = path.getAttribute('title');
+        countryLabel.innerHTML = _(path.getAttribute('title'));
       }
     });
 
@@ -80,7 +96,9 @@ const initMap = (labels) => {
     label.countries.forEach((country) => {
       const c = map.querySelector(`path#${country}`);
       const countryName = c.getAttribute('title');
-      countrySelectorList.innerHTML += `\n<li data-country-code="${country}" data-country-message="${label.message}" data-stroke="${label.stroke}" data-fill="${label.fill}">${countryName}</li>`;
+      countrySelectorList.innerHTML += `\n<li data-country-code="${country}" data-country-message="${_(
+        label.message
+      )}" data-stroke="${label.stroke}" data-fill="${label.fill}">${_(countryName)}</li>`;
     });
   });
 
@@ -100,12 +118,10 @@ const initMap = (labels) => {
         });
       } else {
         mapDisplay.innerHTML = '';
-        let elementScale = 1;
         let country = countrySelectorElements.item(index + 1);
         let countryMap = map
           .querySelector(`#${country.getAttribute('data-country-code')}`)
           .cloneNode(true);
-        let gCode = countryMap.getAttribute('d');
 
         mapSelectorLabel.innerHTML = country.getAttribute('data-country-message');
         mapSelectorLabel.style.color = country.getAttribute('data-fill');
@@ -114,7 +130,6 @@ const initMap = (labels) => {
         countryMap.style.stroke = country.getAttribute('data-stroke');
         mapDisplay.appendChild(countryMap);
         let bbox = countryMap.getBBox();
-        let boundingClientRect = countryMap.getBoundingClientRect();
         let boundingClientRectMap = mapDisplay.getBoundingClientRect();
 
         let viewWidth = bbox.width + mapBorder;
@@ -186,5 +201,9 @@ const chechMobile = () => {
 };
 
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
+const _ = (string) => {
+  return translations[lang][string] || string;
+};
 
 window.addEventListener('resize', () => chechMobile());
