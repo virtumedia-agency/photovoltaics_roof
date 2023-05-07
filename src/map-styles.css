@@ -177,13 +177,6 @@ body {
 
 @media only screen and (max-width: 1024px) {
 
-  @media (orientation: portrait) {
-    .map {
-      width: 50%;
-      margin-left: auto;
-    }
-  }
-
   .map {
     height: calc(100vh - 160px);
     justify-content: center;
@@ -214,4 +207,6 @@ body {
   height: calc(100vh - 160px);
   justify-content: center;
   align-items: flex-start;
+  width: 50%;
+  margin-left: auto;
 }
