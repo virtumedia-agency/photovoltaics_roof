@@ -175,7 +175,7 @@ body {
   align-items: center;
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 768px) {
 
   .map {
     height: calc(100vh - 160px);
