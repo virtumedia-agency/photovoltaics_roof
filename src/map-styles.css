@@ -175,7 +175,14 @@ body {
   align-items: center;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 1024px) {
+
+  @media (orientation: portrait) {
+    .map {
+      width: 50%;
+      margin-left: auto;
+    }
+  }
 
   .map {
     height: calc(100vh - 160px);
@@ -201,4 +208,10 @@ body {
 .is-mobile #mobile-map-display {
   display: flex;
   flex-direction: column;
+}
+
+.is-mobile .map {
+  height: calc(100vh - 160px);
+  justify-content: center;
+  align-items: flex-start;
 }
